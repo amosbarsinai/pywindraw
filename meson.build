@@ -6,20 +6,21 @@ project(
 
 py = import('python').find_installation(pure: false)
 pybind11_dep = dependency('pybind11')
+sfml_graphics_dep = dependency('sfml-graphics')
 
-sources = files('src/bindings.cpp', 'src/my_impl.cpp')
+sources = files('src/bindings.cpp', 'src/window.cpp')
 inc = include_directories('include')
 
 py.extension_module(
-  '_my_cpp_extension_module',
+  '_pywindraw',
   sources,
   include_directories: inc,
-  dependencies: [pybind11_dep],
+  dependencies: [pybind11_dep, sfml_graphics_dep],
   install: true,
-  subdir: 'my_pybind11_meson_project'
+  subdir: 'pywindraw'
 )
 
 py.install_sources(
-  'my_pybind11_meson_project/__init__.py',
-  subdir: 'my_pybind11_meson_project'
+  'pywindraw/__init__.py',
+  subdir: 'pywindraw'
 )

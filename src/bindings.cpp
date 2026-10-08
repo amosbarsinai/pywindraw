@@ -1,8 +1,18 @@
 #include <pybind11/pybind11.h>
-#include "my_header.hpp"
+#include "window.hpp"
+#include "error.hpp"
 
-PYBIND11_MODULE(_my_cpp_extension_module, m) {
-    m.doc() = "My C++ module exposed to Python using pybind11";
+namespace py = pybind11;
 
-    m.def("add", &add, "Add two numbers");
+PYBIND11_MODULE(_pywindraw, m) {
+    m.doc() = "Graphics for Python with SFML";
+
+    py::register_exception<WindowError>(m, "WindowError");
+
+    py::class_<Window>(m, "Window")
+        .def(py::init<std::string, int, int>())
+        .def("update", &Window::update)
+        .def("close", &Window::close)
+        .def("get_width", &Window::get_width).def("set_width", &Window::set_width).def("get_height", &Window::get_height).def("set_height", &Window::set_height)
+    ;
 }
