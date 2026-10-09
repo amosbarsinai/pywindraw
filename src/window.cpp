@@ -30,11 +30,17 @@ void Window::update() {
             _window.close();
         }
     }
+    _window.clear(bg);
+    _window.display();
 }
+
+bool Window::is_open() { return _window.isOpen(); }
 
 int  Window::get_width()        { return _window.getSize().x; }
 int  Window::get_height()       { return _window.getSize().y; }
 void Window::set_width(int x)   { _window.setSize({x, get_height()}); }
 void Window::set_height(int y)  { _window.setSize({get_width(),  y}); }
+void Window::set_color(sf::Color color) { bg = color; }
+sf::Color Window::get_color() { return bg; }
 
 void Window::close() { _window.close(); }

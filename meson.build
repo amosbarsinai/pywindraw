@@ -22,5 +22,7 @@ py.extension_module(
 
 py.install_sources(
   'pywindraw/__init__.py',
+  'pywindraw/color.py',
+  'pywindraw/window.py',
   subdir: 'pywindraw'
 )

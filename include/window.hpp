@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <string>
@@ -12,10 +13,14 @@ class Window {
         );
         void update();
         void close();
+        bool is_open();
         int        get_width();
         int       get_height();
         void  set_width(int x);
         void set_height(int y);
+        void set_color(sf::Color color);
+        sf::Color get_color();
     private:
         sf::RenderWindow _window;
+        sf::Color bg = sf::Color::White;
 };
