@@ -6,7 +6,7 @@ build-backend = "mesonpy"
 name = "pywindraw"
 version = "0.1.0"
 description = "C++ graphics for Python"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 authors = [
   { name = "Amos Bar Sinai", email = "amos.bar-sinai@prizma.org.il" }
 ]
