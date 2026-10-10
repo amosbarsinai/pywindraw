@@ -4,7 +4,8 @@
 namespace pywindraw {
     class Color {
         public:
-            Color(float r, float g, float b, float a = 255);
+            Color();
+            Color(float r, float g, float b, float a = 255 /* alpha values default to 255 even in c++ dev workspace too because i'm lazy */);
             int   get_r();
             int   get_g();
             int   get_b();

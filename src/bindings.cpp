@@ -17,18 +17,25 @@ PYBIND11_MODULE(_pywindraw, m) {
         .def("update", &pywindraw::Window::update)
         .def("close", &pywindraw::Window::close)
         .def("is_open", &pywindraw::Window::is_open)
-        .def("get_width", &pywindraw::Window::get_width).def("set_width", &pywindraw::Window::set_width).def("get_height", &pywindraw::Window::get_height).def("set_height", &pywindraw::Window::set_height)
+        .def("get_width", &pywindraw::Window::get_width)
+        .def("set_width", &pywindraw::Window::set_width)
+        .def("get_height", &pywindraw::Window::get_height)
+        .def("set_height", &pywindraw::Window::set_height)
         .def("get_color", &pywindraw::Window::get_color).def("set_color", &pywindraw::Window::set_color)
     ;
     // let python touch sf too
     py::class_<pywindraw::Color>(m, "Color")
-        .def(py::init<float, float, float, float>())
-        .def("set_r", &pywindraw::Color::set_r)
-        .def("set_g", &pywindraw::Color::set_g)
-        .def("set_b", &pywindraw::Color::set_b)
-        .def("get_r", &pywindraw::Color::get_r)
-        .def("get_g", &pywindraw::Color::get_g)
-        .def("get_b", &pywindraw::Color::get_b)
+        .def(py::init<>())
+        .def(
+            py::init<float, float, float, float>(),
+            py::arg("r"),
+            py::arg("g"),
+            py::arg("b"),
+            py::arg("a") = 255
+        )
+        .def_property("red", &pywindraw::Color::get_r, &pywindraw::Color::set_r)
+        .def_property("green", &pywindraw::Color::get_g, &pywindraw::Color::set_g)
+        .def_property("blue", &pywindraw::Color::get_b, &pywindraw::Color::set_b)
         .def_readonly_static("RED", &pywindraw::Color::RED)
         .def_readonly_static("GREEN", &pywindraw::Color::GREEN)
         .def_readonly_static("BLUE", &pywindraw::Color::BLUE)
