@@ -5,7 +5,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <optional>
 
-Window::Window(
+pywindraw::Window::Window(
     std::string title,
     int initial_window_width,
     int initial_window_height
@@ -19,7 +19,7 @@ Window::Window(
     );
 }
 
-void Window::update() {
+void pywindraw::Window::update() {
     if (! _window.isOpen() ) {
         throw WindowError("Tried to call update() on a closed window");
     }
@@ -34,13 +34,13 @@ void Window::update() {
     _window.display();
 }
 
-bool Window::is_open() { return _window.isOpen(); }
+bool pywindraw::Window::is_open() { return _window.isOpen(); }
 
-int  Window::get_width()        { return _window.getSize().x; }
-int  Window::get_height()       { return _window.getSize().y; }
-void Window::set_width(int x)   { _window.setSize({x, get_height()}); }
-void Window::set_height(int y)  { _window.setSize({get_width(),  y}); }
-void Window::set_color(sf::Color color) { bg = color; }
-sf::Color Window::get_color() { return bg; }
+int  pywindraw::Window::get_width()        { return _window.getSize().x; }
+int  pywindraw::Window::get_height()       { return _window.getSize().y; }
+void pywindraw::Window::set_width(int x)   { _window.setSize({x, get_height()}); }
+void pywindraw::Window::set_height(int y)  { _window.setSize({get_width(),  y}); }
+void pywindraw::Window::set_color(sf::Color color) { bg = color; }
+sf::Color pywindraw::Window::get_color() { return bg; }
 
-void Window::close() { _window.close(); }
+void pywindraw::Window::close() { _window.close(); }
