@@ -30,7 +30,7 @@ void pywindraw::Window::update() {
             _window.close();
         }
     }
-    _window.clear(bg);
+    _window.clear(bg.get_internal_sf_color());
     _window.display();
 }
 
@@ -40,7 +40,7 @@ int  pywindraw::Window::get_width()        { return _window.getSize().x; }
 int  pywindraw::Window::get_height()       { return _window.getSize().y; }
 void pywindraw::Window::set_width(int x)   { _window.setSize({x, get_height()}); }
 void pywindraw::Window::set_height(int y)  { _window.setSize({get_width(),  y}); }
-void pywindraw::Window::set_color(sf::Color color) { bg = color; }
-sf::Color pywindraw::Window::get_color() { return bg; }
+void pywindraw::Window::set_color(pywindraw::Color color) { bg = color; }
+pywindraw::Color pywindraw::Window::get_color() { return bg; }
 
 void pywindraw::Window::close() { _window.close(); }

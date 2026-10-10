@@ -8,7 +8,7 @@ py = import('python').find_installation(pure: false)
 pybind11_dep = dependency('pybind11')
 sfml_graphics_dep = dependency('sfml-graphics')
 
-sources = files('src/bindings.cpp', 'src/window.cpp')
+sources = files('src/bindings.cpp', 'src/window.cpp', 'src/color.cpp')
 inc = include_directories('include')
 
 py.extension_module(
