@@ -1,6 +1,5 @@
 from .color import Color
 
-
 class Window:
     """Basic window class."""
     def __init__(self, title: str, width: int, height: int):

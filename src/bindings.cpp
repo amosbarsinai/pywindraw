@@ -4,6 +4,7 @@
 #include "window.hpp"
 #include "color.hpp"
 #include "error.hpp"
+#include "image.hpp"
 
 namespace py = pybind11;
 
@@ -23,7 +24,6 @@ PYBIND11_MODULE(_pywindraw, m) {
         .def("set_height", &pywindraw::Window::set_height)
         .def("get_color", &pywindraw::Window::get_color).def("set_color", &pywindraw::Window::set_color)
     ;
-    // let python touch sf too
     py::class_<pywindraw::Color>(m, "Color")
         .def(py::init<>())
         .def(
@@ -47,5 +47,12 @@ PYBIND11_MODULE(_pywindraw, m) {
         .def_readonly_static("BLACK", &pywindraw::Color::BLACK)
         .def_readonly_static("GREY", &pywindraw::Color::GREY)
         .def_readonly_static("WHITE", &pywindraw::Color::WHITE)
+    ;
+    py::class_<pywindraw::Image>(m, "Image")
+        .def(py::init<std::string&>())
+        .def(py::init<pywindraw::Color, int, int>())
+        .def("__getitem__", &pywindraw::Image::get_pixel)
+        .def("__setitem__", &pywindraw::Image::set_pixel)
+        .def("__delitem__", &pywindraw::Image::del_pixel)
     ;
 }

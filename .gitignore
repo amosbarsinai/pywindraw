@@ -3,3 +3,5 @@ builddir/
 dist/
 **/__pycache__/
 test*
+.vscode/
+build/
