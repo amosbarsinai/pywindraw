@@ -5,7 +5,7 @@ build-backend = "mesonpy"
 [project]
 name = "pywindraw"
 version = "0.1.0"
-description = "C++ graphics for Python"
+description = "A simple and high level Python graphics library based on SFML"
 requires-python = ">=3.11"
 authors = [
   { name = "Amos Bar Sinai", email = "amos.bar-sinai@prizma.org.il" }

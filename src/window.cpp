@@ -32,7 +32,14 @@ namespace pywindraw {
             }
         }
         _window.clear(bg.get_internal_sf_color());
+        for (pywindraw::Sprite& sprite : sprites) {
+            _window.draw(sprite.get_internal_sf_sprite());
+        }
         _window.display();
+    }
+
+    void Window::set_icon(pywindraw::Image icon) {
+        _window.setIcon(icon.get_internal_sf_image());
     }
 
     bool Window::is_open() { return _window.isOpen(); }

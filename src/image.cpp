@@ -2,6 +2,7 @@
 #include "color.hpp"
 #include <string>
 #include <SFML/Graphics/Image.hpp>
+#include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <stdexcept>
 #include "error.hpp"
@@ -39,6 +40,8 @@ namespace pywindraw {
             throw std::runtime_error("An internal error occured when trying to load the texture of an image");
     }
 
+    sf::Texture Image::get_texture() { return _texture; }
+
     Image::Image(std::string &filepath) {
         if (!_image.loadFromFile(filepath))
             throw pywindraw::ImageError("Could not load an image from '" + filepath + "', ensure it is the correct path and that it is an image file");
@@ -62,5 +65,16 @@ namespace pywindraw {
     void Image::del_pixel(py::tuple index) {
         assert_pixel_valid(index);
         set_pixel(index, Color(0, 0, 0, 0));
+    }
+
+    sf::Image Image::get_internal_sf_image() {
+        return _image;
+    }
+
+    void Image::crop(int x, int y, int width, int height) {
+        sf::Image cropped(sf::Vector2u{width, height});
+        sf::IntRect source_rect(sf::Vector2{x, y}, sf::Vector2{width, height});
+
+        _image.copy(cropped, sf::Vector2u{0, 0}, source_rect, true);
     }
 }

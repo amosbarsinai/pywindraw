@@ -17,6 +17,9 @@ namespace pywindraw {
             void set_pixel(py::tuple index, pywindraw::Color color);
             void del_pixel(py::tuple index);
             void assert_pixel_valid(py::tuple index);
+            sf::Texture get_texture(); // for internal use only
+            void crop(int x, int y, int width, int height);
+            sf::Image get_internal_sf_image(); // for internal use only
         private:
             sf::Image _image;
             sf::Texture _texture;
