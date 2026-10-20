@@ -1,22 +1,91 @@
+//      color.hpp: describes the pywindraw::Color class, directly exposed to python.
+
 #pragma once
 
 #include <SFML/Graphics/Color.hpp>
 
 namespace pywindraw {
+    /**
+     * @brief Class used to handle RGBA values, wrapping an sf::Color for simplicity
+     *  
+    */
     class Color {
         public:
+            /**
+             * @brief Constructs an opaque white color.
+             * 
+             */
             Color();
-            Color(float r, float g, float b, float a = 255 /* alpha values default to 255 even in c++ dev workspace too because i'm lazy */);
-            Color(sf::Color); // for internal use only
-            int   get_r();
-            int   get_g();
-            int   get_b();
-            int   get_a();
+            /**
+             * @brief Constructs an RGBA color.
+             * 
+             */
+            Color(float r, float g, float b, float a = 255); // Default C++ values are not visible to Python, a = 255 is to simplify C++ code
+            /**
+             * @brief Wraps an existing sf::Color object.
+             * 
+             * This is intentionally not exposed.
+             * 
+             */
+            Color(sf::Color);
+
+            /**
+             * @brief Returns the R value of this color.
+             * 
+             * @return the R value of this color
+             * 
+             */
+            int get_r();
+            /**
+             * @brief Returns the G value of this color.
+             * 
+             * @return the G value of this color
+             * 
+             */
+            int get_g();
+            /**
+             * @brief Returns the B value of this color.
+             * 
+             * @return the B value of this color
+             * 
+             */
+            int get_b();
+            /**
+             * @brief Returns the A value of this color.
+             * 
+             * @return the A value of this color
+             * 
+             */
+            int get_a();
+            /**
+             * @brief Sets the R value of this color.
+             * 
+             */
             void set_r(float r);
+            /**
+             * @brief Sets the G value of this color.
+             * 
+             */
             void set_g(float g);
+            /**
+             * @brief Sets the B value of this color.
+             * 
+             */
             void set_b(float b);
+            /**
+             * @brief Sets the A value of this color.
+             * 
+             */
             void set_a(float a);
+
+            /**
+             * @brief Returns the internal sf::Color this object wraps.
+             * 
+             * This is intentionally not exposed.
+             * 
+             */
             sf::Color get_internal_sf_color();
+
             static const Color RED;
             static const Color GREEN;
             static const Color BLUE;

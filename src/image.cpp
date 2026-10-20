@@ -1,48 +1,18 @@
-#include "image.hpp"
 #include "color.hpp"
+#include "error.hpp"
+#include "image.hpp"
+
+#include <stdexcept>
 #include <string>
+
 #include <SFML/Graphics/Image.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/System/Vector2.hpp>
-#include <stdexcept>
-#include "error.hpp"
 
 namespace py = pybind11;
 
 namespace pywindraw {
-    void Image::assert_pixel_valid(py::tuple index) {
-        if (index.size() != 2)
-            throw std::invalid_argument("Expected an x and y value for pixel index (num of arguments recieved: " + std::to_string(index.size()) + ")");
-        sf::Vector2u size = _image.getSize();
-        if (index[0].cast<int>() < 0 || index[1].cast<int>() < 0)
-            throw std::invalid_argument(
-                "Pixel coordinates must both be positive (recieved " +
-                std::to_string(index[0].cast<int>()) +
-                ", " +
-                std::to_string(index[1].cast<int>()) + 
-                ")"
-            );
-        if (index[0].cast<int>() > size.x || index[1].cast<int>() > size.y)
-            throw std::invalid_argument(
-                "Pixel must be inside the image (recieved " +
-                std::to_string(index[0].cast<int>()) +
-                ", " +
-                std::to_string(index[1].cast<int>()) +
-                "), image size is " +
-                std::to_string(size.x) +
-                " by " +
-                std::to_string(size.y)
-            );
-    }
-
-    void Image::update_texture() {
-        if (!_texture.loadFromImage(_image))
-            throw std::runtime_error("An internal error occured when trying to load the texture of an image");
-    }
-
-    sf::Texture Image::get_texture() { return _texture; }
-
-    Image::Image(std::string &filepath) {
+    Image::Image(const std::string &filepath) {
         if (!_image.loadFromFile(filepath))
             throw pywindraw::ImageError("Could not load an image from '" + filepath + "', ensure it is the correct path and that it is an image file");
         update_texture();
@@ -50,6 +20,16 @@ namespace pywindraw {
 
     Image::Image(pywindraw::Color color, int width, int height) {
         _image = sf::Image({width, height}, color.get_internal_sf_color());
+        update_texture();
+    }
+
+    void Image::crop(int x, int y, int width, int height) {
+        assert_pixel_valid(x, y);
+        sf::Image cropped(sf::Vector2u{width, height});
+        sf::IntRect source_rect(sf::Vector2{x, y}, sf::Vector2{width, height});
+
+        _image.copy(cropped, sf::Vector2u{0, 0}, source_rect, true);
+        update_texture();
     }
 
     pywindraw::Color Image::get_pixel(py::tuple index) {
@@ -67,14 +47,44 @@ namespace pywindraw {
         set_pixel(index, Color(0, 0, 0, 0));
     }
 
-    sf::Image Image::get_internal_sf_image() {
+    void Image::assert_pixel_valid(py::tuple index) {
+        if (index.size() != 2)
+            throw std::invalid_argument("Expected an x and y value for pixel index (num of arguments recieved: " + std::to_string(index.size()) + ")");
+        assert_pixel_valid(index[0].cast<int>(), index[1].cast<int>());
+    }
+    void Image::assert_pixel_valid(int x, int y) {
+        sf::Vector2u size = _image.getSize();
+        if (x < 0 || y < 0)
+            throw std::invalid_argument(
+                "Pixel coordinates must both be positive (recieved " +
+                std::to_string(x) +
+                ", " +
+                std::to_string(y) + 
+                ")"
+            );
+        if (x > size.x || y > size.y)
+            throw std::invalid_argument(
+                "Pixel must be inside the image (recieved " +
+                std::to_string(x) +
+                ", " +
+                std::to_string(y) +
+                "), image size is " +
+                std::to_string(size.x) +
+                " by " +
+                std::to_string(size.y)
+            );
+    }
+
+    const std::shared_ptr<sf::Texture>& Image::get_internal_sf_texture() const {
+        return _texture;
+    }
+
+    const sf::Image& Image::get_internal_sf_image() const {
         return _image;
     }
 
-    void Image::crop(int x, int y, int width, int height) {
-        sf::Image cropped(sf::Vector2u{width, height});
-        sf::IntRect source_rect(sf::Vector2{x, y}, sf::Vector2{width, height});
-
-        _image.copy(cropped, sf::Vector2u{0, 0}, source_rect, true);
+    void Image::update_texture() {
+        if (!_texture->loadFromImage(_image))
+            throw std::runtime_error("An internal error occured when trying to load the texture of an image");
     }
 }

@@ -12,6 +12,9 @@ class Image:
         """Initialize an image with a monochrome."""
         ...
 
+    def crop(self, x: int, y: int, width: int, height: int):
+        """Crop this image to an inner rectangle."""
+
     def __getitem__(self, key: tuple[int, int]) -> Color:
         """Return the color of the pixel at [x, y]."""
         ...

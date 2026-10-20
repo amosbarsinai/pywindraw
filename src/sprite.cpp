@@ -5,10 +5,10 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 namespace pywindraw {
-    Sprite::Sprite(pywindraw::Image image) :
-            _texture(std::make_shared<sf::Texture>(image.get_texture())),
+    Sprite::Sprite(const pywindraw::Image& image) :
+            _texture(image.get_internal_sf_texture()),
             _sprite(*_texture) {}
-    sf::Sprite Sprite::get_internal_sf_sprite() {
+    sf::Sprite& Sprite::get_internal_sf_sprite() {
         return _sprite;
     }
 }

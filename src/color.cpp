@@ -1,4 +1,5 @@
 #include "color.hpp"
+
 #include <stdexcept>
 #include <string>
 

@@ -1,7 +1,11 @@
 from .color import Color
+from .sprite import Sprite
 
 class Window:
     """Basic window class."""
+
+    sprites: dict[Sprite, list[float]]
+
     def __init__(self, title: str, width: int, height: int):
         """Initialize a new window with default SFML properties."""
         ...
@@ -40,4 +44,8 @@ class Window:
 
     def set_color(self, color: Color) -> None:
         """Set the background color of the window."""
+        ...
+
+    def get_delta(self) -> float:
+        """Returns the elapsed time since the last frame."""
         ...

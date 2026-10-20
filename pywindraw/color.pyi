@@ -1,7 +1,7 @@
 from typing import overload, ClassVar
 
 class Color:
-    """Color class."""
+    """RGBA color class."""
 
     red: int
     green: int
