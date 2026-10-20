@@ -1,6 +1,7 @@
 #include "color.hpp"
 #include "error.hpp"
 #include "image.hpp"
+#include "rect.hpp"
 
 #include <stdexcept>
 #include <string>
@@ -19,32 +20,59 @@ namespace pywindraw {
     }
 
     Image::Image(pywindraw::Color color, int width, int height) {
-        _image = sf::Image({width, height}, color.get_internal_sf_color());
+        if (width <= 0 || height <= 0)
+            throw std::invalid_argument("Image dimensions must be positive");
+        _image = sf::Image(
+            sf::Vector2u{
+                static_cast<unsigned int>(width),
+                static_cast<unsigned int>(height)
+            },
+            color.get_internal_sf_color()
+        );
         update_texture();
     }
 
     void Image::crop(int x, int y, int width, int height) {
-        assert_pixel_valid(x, y);
-        sf::Image cropped(sf::Vector2u{width, height});
+        const sf::Vector2u image_size = _image.getSize();
+        if (!fits_within_rect(x, y, width, height, image_size.x, image_size.y))
+            throw std::invalid_argument("Crop rectangle must be inside the image");
+
+        sf::Image cropped(sf::Vector2u{
+            static_cast<unsigned int>(width),
+            static_cast<unsigned int>(height)
+        });
         sf::IntRect source_rect(sf::Vector2{x, y}, sf::Vector2{width, height});
 
-        _image.copy(cropped, sf::Vector2u{0, 0}, source_rect, true);
+        if (!cropped.copy(_image, sf::Vector2u{0, 0}, source_rect, true))
+            throw std::runtime_error("Could not copy the requested image crop");
+        _image = cropped;
         update_texture();
     }
 
     pywindraw::Color Image::get_pixel(py::tuple index) {
         assert_pixel_valid(index);
-        return _image.getPixel(sf::Vector2u{index[0].cast<std::size_t>(), index[1].cast<std::size_t>()});
+        return _image.getPixel(sf::Vector2u{
+            static_cast<unsigned int>(index[0].cast<int>()),
+            static_cast<unsigned int>(index[1].cast<int>())
+        });
     }
 
     void Image::set_pixel(py::tuple index, pywindraw::Color color) {
         assert_pixel_valid(index);
-        _image.setPixel(sf::Vector2u{index[0].cast<std::size_t>(), index[1].cast<std::size_t>()}, color.get_internal_sf_color());
+        _image.setPixel(
+            sf::Vector2u{
+                static_cast<unsigned int>(index[0].cast<int>()),
+                static_cast<unsigned int>(index[1].cast<int>())
+            },
+            color.get_internal_sf_color()
+        );
+        update_texture();
     }
 
     void Image::del_pixel(py::tuple index) {
         assert_pixel_valid(index);
         set_pixel(index, Color(0, 0, 0, 0));
+        update_texture();
     }
 
     void Image::assert_pixel_valid(py::tuple index) {
@@ -53,16 +81,8 @@ namespace pywindraw {
         assert_pixel_valid(index[0].cast<int>(), index[1].cast<int>());
     }
     void Image::assert_pixel_valid(int x, int y) {
-        sf::Vector2u size = _image.getSize();
-        if (x < 0 || y < 0)
-            throw std::invalid_argument(
-                "Pixel coordinates must both be positive (recieved " +
-                std::to_string(x) +
-                ", " +
-                std::to_string(y) + 
-                ")"
-            );
-        if (x > size.x || y > size.y)
+        const sf::Vector2u size = _image.getSize();
+        if (!fits_within_rect(x, y, 1, 1, size.x, size.y))
             throw std::invalid_argument(
                 "Pixel must be inside the image (recieved " +
                 std::to_string(x) +

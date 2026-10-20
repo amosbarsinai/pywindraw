@@ -4,6 +4,9 @@ from .sprite import Sprite
 class Window:
     """Basic window class."""
 
+    width: int
+    height: int
+
     sprites: dict[Sprite, list[float]]
 
     def __init__(self, title: str, width: int, height: int):
@@ -22,20 +25,8 @@ class Window:
         """Return whether the window is open. Can be used as a condition for a game loop."""
         ...
 
-    def get_width(self) -> int:
-        """Return the current width of the window, in pixels."""
-        ...
-
-    def set_width(self, width: int) -> None:
-        """Set the current width of the window."""
-        ...
-
-    def get_height(self) -> int:
-        """Return the current height of the window, in pixels."""
-        ...
-
-    def set_height(self, height: int) -> None:
-        """Set the current height of the window."""
+    def set_title(self, title: str) -> None:
+        """Set the title of this window."""
         ...
 
     def get_color(self) -> Color:

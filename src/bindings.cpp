@@ -19,7 +19,7 @@ PYBIND11_MODULE(_pywindraw, m) {
     py::register_exception<pywindraw::ImageError>(m, "ImageError").doc() = "Logic errors related to image handling.";
 
     py::class_<pywindraw::Color>(m, "Color")
-        .def(py::init<>())
+        .def(py::init<>(), "Initialize an opaque white color.")
         .def(
             py::init<float, float, float, float>(),
             py::arg("r"),
@@ -44,31 +44,30 @@ PYBIND11_MODULE(_pywindraw, m) {
         .doc() = "RGBA color."
     ;
     py::class_<pywindraw::Image>(m, "Image")
-        .def(py::init<const std::string&>())
-        .def(py::init<pywindraw::Color, int, int>())
-        .def("crop", &pywindraw::Image::crop)
+        .def(py::init<const std::string&>(), "Load an image from a file.")
+        .def(py::init<pywindraw::Color, int, int>(), "Create an image with a uniform color.")
+        .def("crop", &pywindraw::Image::crop, "Crop the image to an inner rectangle.")
         .def("__getitem__", &pywindraw::Image::get_pixel)
         .def("__setitem__", &pywindraw::Image::set_pixel)
         .def("__delitem__", &pywindraw::Image::del_pixel)
         .doc() = "Class used to handle images, attachable to sprites."
     ;
     py::class_<pywindraw::Sprite>(m, "Sprite")
-        .def(py::init<const pywindraw::Image&>())
+        .def(py::init<const pywindraw::Image&>(), "Initialize a sprite from an image.")
         .doc() = "Class used to handle drawable, movable sprites."
     ;
 
     py::class_<pywindraw::Window>(m, "Window")
-        .def(py::init<std::string, int, int>())
-        .def("update", &pywindraw::Window::update)
-        .def("close", &pywindraw::Window::close)
-        .def("is_open", &pywindraw::Window::is_open)
-        .def("get_width", &pywindraw::Window::get_width)
-        .def("set_width", &pywindraw::Window::set_width)
-        .def("get_height", &pywindraw::Window::get_height)
-        .def("set_height", &pywindraw::Window::set_height)
+        .def(py::init<std::string, int, int>(), "Initialize a window from some basic parameters.")
+        .def("update", &pywindraw::Window::update, "Update, draw and display the window.")
+        .def("close", &pywindraw::Window::close, "Close and destroy the window.")
+        .def("is_open", &pywindraw::Window::is_open, "Return whether the window is open.")
+        .def("set_title", &pywindraw::Window::set_title, "Set the title of the window.")
+        .def_property("width", &pywindraw::Window::get_width, &pywindraw::Window::set_width)
+        .def_property("height", &pywindraw::Window::get_height, &pywindraw::Window::set_height)
         .def("get_color", &pywindraw::Window::get_color).def("set_color", &pywindraw::Window::set_color)
-        .def("set_icon", &pywindraw::Window::set_icon)
-        .def("get_delta", &pywindraw::Window::get_delta)
+        .def("set_icon", &pywindraw::Window::set_icon, "Set the icon of the window.")
+        .def("get_delta", &pywindraw::Window::get_delta, "Return the elapsed time since the last frame was drawn.")
         .def_readwrite("sprites", &pywindraw::Window::sprites)
         .doc() = "Class used to handle windows, containing sprites."
     ;

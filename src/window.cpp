@@ -1,10 +1,15 @@
 #include "window.hpp"
 #include "error.hpp"
+#include "rect.hpp"
+
+#include <optional>
+#include <stdexcept>
+#include <string>
+
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <pybind11/pybind11.h>
-#include <optional>
 
 namespace pywindraw {
     Window::Window(
@@ -12,9 +17,21 @@ namespace pywindraw {
         int initial_window_width,
         int initial_window_height
     ) {
+        const sf::Vector2u desktop_size = sf::VideoMode::getDesktopMode().size;
+        if (!fits_within_rect(
+                0, 0, initial_window_width, initial_window_height,
+                desktop_size.x, desktop_size.y
+            ))
+            throw std::invalid_argument(
+                "Window dimensions must fit within the desktop (" + std::to_string(desktop_size.x) + "x" + std::to_string(desktop_size.y) + ")"
+            );
+
         _window.create(
             sf::VideoMode {
-                { initial_window_width, initial_window_height },
+                {
+                    static_cast<unsigned int>(initial_window_width),
+                    static_cast<unsigned int>(initial_window_height)
+                },
                 sf::VideoMode::getDesktopMode().bitsPerPixel
             },
             title
@@ -30,14 +47,18 @@ namespace pywindraw {
             if (event->is<sf::Event::Closed>())
             {
                 _window.close();
+                return;
             }
+        }
+        if (!_window.isOpen()) {
+            throw WindowError("Tried to call update() on a closed window");
         }
         _window.clear(bg.get_internal_sf_color());
         for (const auto& item : sprites) {
             pywindraw::Sprite& sprite = pybind11::cast<pywindraw::Sprite&>(item.first);
             pybind11::sequence position = pybind11::cast<pybind11::sequence>(item.second);
             if (position.size() != 2) {
-                throw pybind11::value_error("Sprite coordinates must contain exactly two values");
+                throw pybind11::value_error("Sprite coordinates must contain exactly two values (found " + std::to_string(position.size()) + ")");
             }
             sf::Sprite& drawable = sprite.get_internal_sf_sprite();
             drawable.setPosition({
@@ -58,10 +79,30 @@ namespace pywindraw {
 
     bool Window::is_open() { return _window.isOpen(); }
 
+    void Window::set_title(std::string title) { _window.setTitle(title); }
+
     int  Window::get_width()        { return _window.getSize().x; }
     int  Window::get_height()       { return _window.getSize().y; }
-    void Window::set_width(int x)   { _window.setSize({x, get_height()}); }
-    void Window::set_height(int y)  { _window.setSize({get_width(),  y}); }
+    void Window::set_width(int x)   {
+        const sf::Vector2u desktop_size = sf::VideoMode::getDesktopMode().size;
+        if (!fits_within_rect(0, 0, x, 1, desktop_size.x, desktop_size.y))
+            throw std::invalid_argument(
+                "Window dimensions must fit within the desktop (" + std::to_string(desktop_size.x) + "x" + std::to_string(desktop_size.y) + ")"
+            );
+        sf::Vector2u size = _window.getSize();
+        size.x = static_cast<unsigned int>(x);
+        _window.setSize(size);
+    }
+    void Window::set_height(int y)  {
+        const sf::Vector2u desktop_size = sf::VideoMode::getDesktopMode().size;
+        if (!fits_within_rect(0, 0, 1, y, desktop_size.x, desktop_size.y))
+            throw std::invalid_argument(
+                "Window dimensions must fit within the desktop (" + std::to_string(desktop_size.x) + "x" + std::to_string(desktop_size.y) + ")"
+            );
+        sf::Vector2u size = _window.getSize();
+        size.y = static_cast<unsigned int>(y);
+        _window.setSize(size);
+    }
 
     Color Window::get_color() { return bg; }
     void Window::set_color(Color color) { bg = color; }

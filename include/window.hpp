@@ -43,6 +43,10 @@ namespace pywindraw {
              */
             bool is_open();
             /**
+             * @brief Sets the title of the window.
+             */
+            void set_title(std::string title);
+            /**
              * @brief Returns the width of the window.
              * 
              * @returns the width of the window.
@@ -88,6 +92,6 @@ namespace pywindraw {
             sf::RenderWindow _window;
             pywindraw::Color bg = pywindraw::Color::WHITE;
             sf::Clock clock;
-            double delta;
+            double delta = 0.0;
     };
 }
