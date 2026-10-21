@@ -15,7 +15,8 @@ namespace pywindraw {
     Window::Window(
         std::string title,
         int initial_window_width,
-        int initial_window_height
+        int initial_window_height,
+        bool resizable
     ) {
         const sf::Vector2u desktop_size = sf::VideoMode::getDesktopMode().size;
         if (!fits_within_rect(
@@ -26,16 +27,29 @@ namespace pywindraw {
                 "Window dimensions must fit within the desktop (" + std::to_string(desktop_size.x) + "x" + std::to_string(desktop_size.y) + ")"
             );
 
-        _window.create(
-            sf::VideoMode {
-                {
-                    static_cast<unsigned int>(initial_window_width),
-                    static_cast<unsigned int>(initial_window_height)
+        if (!resizable)
+            _window.create(
+                sf::VideoMode {
+                    {
+                        static_cast<unsigned int>(initial_window_width),
+                        static_cast<unsigned int>(initial_window_height)
+                    },
+                    sf::VideoMode::getDesktopMode().bitsPerPixel
                 },
-                sf::VideoMode::getDesktopMode().bitsPerPixel
-            },
-            title
-        );
+                title
+            );
+        else
+            _window.create(
+                sf::VideoMode {
+                    {
+                        static_cast<unsigned int>(initial_window_width),
+                        static_cast<unsigned int>(initial_window_height)
+                    },
+                    sf::VideoMode::getDesktopMode().bitsPerPixel
+                },
+                title,
+                sf::Style::Resize
+            );
     }
 
     void Window::update() {
@@ -78,6 +92,13 @@ namespace pywindraw {
     void Window::close() { _window.close(); }
 
     bool Window::is_open() { return _window.isOpen(); }
+
+    bool Window::is_focused() { return _window.hasFocus(); }
+    void Window::request_focus() {
+        _window.requestFocus();
+        if (!_window.hasFocus())
+            throw WindowError("A request to focus a window has been denied.");
+    }
 
     void Window::set_title(std::string title) { _window.setTitle(title); }
 

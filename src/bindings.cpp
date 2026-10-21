@@ -58,10 +58,18 @@ PYBIND11_MODULE(_pywindraw, m) {
     ;
 
     py::class_<pywindraw::Window>(m, "Window")
-        .def(py::init<std::string, int, int>(), "Initialize a window from some basic parameters.")
+        .def(py::init<std::string, int, int, bool>(),
+            py::arg("title"),
+            py::arg("initial_window_width"),
+            py::arg("initial_window_height"),
+            py::arg("resizable") = false,
+            "Initialize a window from some basic parameters."
+        )
         .def("update", &pywindraw::Window::update, "Update, draw and display the window.")
         .def("close", &pywindraw::Window::close, "Close and destroy the window.")
         .def("is_open", &pywindraw::Window::is_open, "Return whether the window is open.")
+        .def("is_focused", &pywindraw::Window::is_focused, "Return whether the window is focused.")
+        .def("request_focus", &pywindraw::Window::request_focus, "Attempt to focus this window.")
         .def("set_title", &pywindraw::Window::set_title, "Set the title of the window.")
         .def_property("width", &pywindraw::Window::get_width, &pywindraw::Window::set_width)
         .def_property("height", &pywindraw::Window::get_height, &pywindraw::Window::set_height)

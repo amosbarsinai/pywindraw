@@ -25,6 +25,14 @@ class Window:
         """Return whether the window is open. Can be used as a condition for a game loop."""
         ...
 
+    def is_focused(self) -> bool:
+        """Return whether the window is focused."""
+        ...
+
+    def request_focus(self) -> None:
+        """Attempt to focus this window."""
+        ...
+
     def set_title(self, title: str) -> None:
         """Set the title of this window."""
         ...

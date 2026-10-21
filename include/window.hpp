@@ -26,7 +26,8 @@ namespace pywindraw {
             Window(
                 std::string title,
                 int initial_window_width,
-                int initial_window_height
+                int initial_window_height,
+                bool resizable
             );
             /**
              * @brief Update, draw and display the window.
@@ -42,6 +43,18 @@ namespace pywindraw {
              * @returns whether the window is open.
              */
             bool is_open();
+            /**
+             * @brief Returns whether the window is focused.
+             * 
+             * @returns whether the window is focused.
+             */
+            bool is_focused();
+            /**
+             * @brief Requests a window focus from the window manager.
+             * 
+             * Raises a WindowError if the request is denied.
+             */
+            void request_focus();
             /**
              * @brief Sets the title of the window.
              */
