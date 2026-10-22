@@ -11,7 +11,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <pybind11/pybind11.h>
 
-namespace pywindraw {
+namespace pywindraw::window {
     Window::Window(
         std::string title,
         int initial_window_width,
@@ -54,7 +54,7 @@ namespace pywindraw {
 
     void Window::update() {
         if (! _window.isOpen() ) {
-            throw WindowError("Tried to call update() on a closed window");
+            throw error::WindowError("Tried to call update() on a closed window");
         }
         while (const std::optional event = _window.pollEvent())
         {
@@ -65,11 +65,11 @@ namespace pywindraw {
             }
         }
         if (!_window.isOpen()) {
-            throw WindowError("Tried to call update() on a closed window");
+            throw error::WindowError("Tried to call update() on a closed window");
         }
         _window.clear(bg.get_internal_sf_color());
         for (const auto& item : sprites) {
-            pywindraw::Sprite& sprite = pybind11::cast<pywindraw::Sprite&>(item.first);
+            sprite::Sprite& sprite = pybind11::cast<sprite::Sprite&>(item.first);
             pybind11::sequence position = pybind11::cast<pybind11::sequence>(item.second);
             if (position.size() != 2) {
                 throw pybind11::value_error("Sprite coordinates must contain exactly two values (found " + std::to_string(position.size()) + ")");
@@ -97,7 +97,7 @@ namespace pywindraw {
     void Window::request_focus() {
         _window.requestFocus();
         if (!_window.hasFocus())
-            throw WindowError("A request to focus a window has been denied.");
+            throw error::WindowError("A request to focus a window has been denied.");
     }
 
     void Window::set_title(std::string title) { _window.setTitle(title); }
@@ -125,10 +125,10 @@ namespace pywindraw {
         _window.setSize(size);
     }
 
-    Color Window::get_color() { return bg; }
-    void Window::set_color(Color color) { bg = color; }
+    color::Color Window::get_color() { return bg; }
+    void Window::set_color(color::Color color) { bg = color; }
 
-    void Window::set_icon(const pywindraw::Image& icon) {
+    void Window::set_icon(const image::Image& icon) {
         _window.setIcon(icon.get_internal_sf_image());
     }
 }

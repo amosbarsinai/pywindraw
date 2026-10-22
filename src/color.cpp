@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <string>
 
-namespace pywindraw {
+namespace pywindraw::color {
     void Color::set_r(float r) {
         if (r < 0) throw std::invalid_argument("Red RGB value received was less than 0 (recieved " + std::to_string(r) + ')');
         if (r > 255) throw std::invalid_argument("Red RGB value received was greater than 255 (recieved " + std::to_string(r) + ')');

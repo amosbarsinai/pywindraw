@@ -4,7 +4,7 @@
 
 #include <SFML/Graphics/Color.hpp>
 
-namespace pywindraw {
+namespace pywindraw::color {
     /**
      * @brief Class used to handle RGBA values, wrapping an sf::Color for simplicity
      *  

@@ -12,7 +12,7 @@ sources = files('src/bindings.cpp', 'src/window.cpp', 'src/color.cpp', 'src/imag
 inc = include_directories('include')
 
 py.extension_module(
-  '_pywindraw',
+  'pywindraw',
   sources,
   include_directories: inc,
   dependencies: [pybind11_dep, sfml_graphics_dep],
@@ -24,13 +24,9 @@ py.install_sources(
   'pywindraw/__init__.py',
   'pywindraw/__init__.pyi',
   'pywindraw/py.typed',
-  'pywindraw/color.py',
   'pywindraw/color.pyi',
-  'pywindraw/window.py',
   'pywindraw/window.pyi',
-  'pywindraw/image.py',
   'pywindraw/image.pyi',
-  'pywindraw/sprite.py',
   'pywindraw/sprite.pyi',
   subdir: 'pywindraw'
 )

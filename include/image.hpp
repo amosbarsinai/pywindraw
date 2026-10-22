@@ -13,7 +13,7 @@
 
 namespace py = pybind11;
 
-namespace pywindraw {
+namespace pywindraw::image {
     /**
      * @brief Class used to handle images.
      * 
@@ -30,7 +30,7 @@ namespace pywindraw {
             /**
              * @brief Create a new image with a uniform color.
              */
-            Image(pywindraw::Color color, int width, int height);
+            Image(color::Color color, int width, int height);
             /**
              * @brief Crop the image to a defined rectangle inside.
              * 
@@ -42,13 +42,13 @@ namespace pywindraw {
              * 
              * This function is exposed to python as the getter method of the pywindraw::Image class.
              */
-            pywindraw::Color get_pixel(py::tuple index);
+            color::Color get_pixel(py::tuple index);
             /**
              * @brief Set the color of a pixel.
              * 
              * This function is exposed to python as the setter method of the pywindraw::Image class.
              */
-            void set_pixel(py::tuple index, pywindraw::Color color);
+            void set_pixel(py::tuple index, color::Color color);
             /**
              * @brief Set the color of a pixel to transparent (black).
              * 

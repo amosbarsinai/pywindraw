@@ -4,7 +4,7 @@
 
 #include <stdexcept>
 
-namespace pywindraw {
+namespace pywindraw::error {
 
     /**
      * @brief Raised when a window-related logic error occurs.

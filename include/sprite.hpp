@@ -10,7 +10,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 
-namespace pywindraw {
+namespace pywindraw::sprite {
     /**
      * @brief Class used to handle sprites.
      * 
@@ -21,7 +21,7 @@ namespace pywindraw {
             /**
              * @brief Construct a sprite from an image.
              */
-            Sprite(const pywindraw::Image& image);
+            Sprite(const image::Image& image);
             /**
              * @brief Get private _sprite variable.
              * 

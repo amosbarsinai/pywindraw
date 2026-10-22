@@ -12,14 +12,14 @@
 
 namespace py = pybind11;
 
-namespace pywindraw {
+namespace pywindraw::image {
     Image::Image(const std::string &filepath) {
         if (!_image.loadFromFile(filepath))
-            throw pywindraw::ImageError("Could not load an image from '" + filepath + "', ensure it is the correct path and that it is an image file");
+            throw error::ImageError("Could not load an image from '" + filepath + "', ensure it is the correct path and that it is an image file");
         update_texture();
     }
 
-    Image::Image(pywindraw::Color color, int width, int height) {
+    Image::Image(color::Color color, int width, int height) {
         if (width <= 0 || height <= 0)
             throw std::invalid_argument("Image dimensions must be positive");
         _image = sf::Image(
@@ -49,7 +49,7 @@ namespace pywindraw {
         update_texture();
     }
 
-    pywindraw::Color Image::get_pixel(py::tuple index) {
+    color::Color Image::get_pixel(py::tuple index) {
         assert_pixel_valid(index);
         return _image.getPixel(sf::Vector2u{
             static_cast<unsigned int>(index[0].cast<int>()),
@@ -57,7 +57,7 @@ namespace pywindraw {
         });
     }
 
-    void Image::set_pixel(py::tuple index, pywindraw::Color color) {
+    void Image::set_pixel(py::tuple index, color::Color color) {
         assert_pixel_valid(index);
         _image.setPixel(
             sf::Vector2u{
@@ -71,7 +71,7 @@ namespace pywindraw {
 
     void Image::del_pixel(py::tuple index) {
         assert_pixel_valid(index);
-        set_pixel(index, Color(0, 0, 0, 0));
+        set_pixel(index, color::Color(0, 0, 0, 0));
         update_texture();
     }
 

@@ -12,7 +12,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-namespace pywindraw {
+namespace pywindraw::window {
     /**
      * @brief Class used to handle a basic window.
      * 
@@ -84,15 +84,15 @@ namespace pywindraw {
              * 
              * @returns the background color of the window.
              */
-            pywindraw::Color get_color();
+            color::Color get_color();
             /**
              * @brief Sets the background color of the window.
              */
-            void set_color(pywindraw::Color color);
+            void set_color(color::Color color);
             /**
              * @brief Sets the window icon.
              */
-            void set_icon(const pywindraw::Image& image);
+            void set_icon(const image::Image& image);
             /**
              * @brief Returns the elapsed time since the last frame, in seconds.
              * 
@@ -103,7 +103,7 @@ namespace pywindraw {
             pybind11::dict sprites;
         private:
             sf::RenderWindow _window;
-            pywindraw::Color bg = pywindraw::Color::WHITE;
+            color::Color bg = color::Color::WHITE;
             sf::Clock clock;
             double delta = 0.0;
     };
